@@ -22,7 +22,7 @@ router.post(
     ], 
     crearUsuario);
 
-router.post('/',
+router.post('/login',
     [
         check('email', 'El email es obligatorio').isEmail(),
         check('password', 'El password debe tener 6 caracteres').isLength({ min: 6 }),
