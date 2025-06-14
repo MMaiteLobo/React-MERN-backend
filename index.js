@@ -14,7 +14,7 @@ dbConnection();
 app.use(cors());
 
 //Directorio publico
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 //Lectura y parseo del body
 app.use(express.json());
@@ -24,7 +24,7 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/events', require('./routes/events'));
 
 // Manejo de rutas no encontradas para API
-app.use('/api/*', (req, res) => {
+app.all('/api/*', (req, res) => {
     res.status(404).json({
         ok: false,
         msg: 'Ruta no encontrada'
@@ -32,7 +32,7 @@ app.use('/api/*', (req, res) => {
 });
 
 // Catch-all route para SPA - solo para GET requests
-app.get('/*', (req, res) => {
+app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
@@ -47,6 +47,6 @@ app.use((err, req, res, next) => {
 
 //Escuchar peticiones
 const port = process.env.PORT || 4000;
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
     console.log(`Servidor corriendo en el puerto ${port}`);
 });
