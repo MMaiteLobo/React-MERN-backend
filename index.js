@@ -23,10 +23,18 @@ app.use(express.json());
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/events', require('./routes/events'));
 
-app.use('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/index.html'));
+// Manejo de rutas no encontradas para API
+app.use('/api/*', (req, res) => {
+    res.status(404).json({
+        ok: false,
+        msg: 'Ruta no encontrada'
+    });
 });
 
+// Catch-all route para SPA
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/index.html'));
+});
 
 //Escuchar peticiones
 app.listen(process.env.PORT, () => {
