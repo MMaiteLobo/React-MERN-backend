@@ -19,7 +19,7 @@ app.use(express.static('public'));
 //Lectura y parseo del body
 app.use(express.json());
 
-//Rutas
+//Rutas API
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/events', require('./routes/events'));
 
@@ -31,12 +31,22 @@ app.use('/api/*', (req, res) => {
     });
 });
 
-// Catch-all route para SPA
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/index.html'));
+// Catch-all route para SPA - solo para GET requests
+app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Manejo de errores global
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({
+        ok: false,
+        msg: 'Error interno del servidor'
+    });
 });
 
 //Escuchar peticiones
-app.listen(process.env.PORT, () => {
-    console.log(`Servidor corriendo en el puerto ${process.env.PORT}`);
+const port = process.env.PORT || 4000;
+app.listen(port, () => {
+    console.log(`Servidor corriendo en el puerto ${port}`);
 });
